@@ -1,53 +1,53 @@
-import React, { useState } from 'react';
-import Fetch, { useFetch, FetchContext } from 'react-fetch-component';
-import buildQuery from 'odata-query';
+import React, {useState} from 'react';
+import {FetchContext, useFetch} from 'react-fetch-component';
+import {QueryBuilder} from 'odata-query-builder';
 
-import { isFunction } from './utils';
+import {isEmpty, isFunction} from './utils';
 
 function buildUrl(baseUrl, query) {
-  return query !== false && baseUrl + buildQuery(query);
+    return query !== false && baseUrl + (isEmpty(query) ? '' : query.toQuery());
 }
 
-function useOData({ baseUrl, defaultQuery, query, ...props }) {
-  const [state, setState] = useState({
-    query: defaultQuery
-  });
-  state.setQuery = (updater, cb) =>
-    setState(
-      prevState => ({
-        query: {
-          ...prevState.query,
-          ...(updater === 'function' ? updater(prevState) : updater)
-        }
-      }),
-      cb
+function useOData({baseUrl, defaultQuery, query, ...props}) {
+    const [state, setState] = useState({
+        query: defaultQuery
+    });
+    state.setQuery = (updater, cb) =>
+        setState(
+            prevState => ({
+                query: {
+                    ...prevState.query,
+                    ...(isFunction(updater) ? updater(prevState.query) : updater)
+                }
+            }),
+            cb
+        );
+
+    const fetchState = useFetch({
+        url: query !== false && buildUrl(baseUrl, {...query, ...state.query}),
+        fetchFunction: (url, options, updateOptions) => {
+            url = typeof url === 'string' ? url : buildUrl(baseUrl, url);
+            return fetch(url, options, updateOptions);
+        },
+        ...props
+    });
+
+    return {...fetchState, ...state};
+}
+
+const POData = ({children, ...props}) => {
+    const state = useOData(props);
+    return (
+        <FetchContext.Provider value={state}>
+            {isFunction(children) ? (
+                <FetchContext.Consumer>{children}</FetchContext.Consumer>
+            ) : (
+                children
+            )}
+        </FetchContext.Provider>
     );
-
-  const fetchState = useFetch({
-    url: query !== false && buildUrl(baseUrl, { ...query, ...state.query }),
-    fetchFunction: (url, options, updateOptions) => {
-      url = typeof url === 'string' ? url : buildUrl(baseUrl, url);
-      return fetch(url, options, updateOptions);
-    },
-    ...props
-  });
-
-  return { ...fetchState, ...state };
-}
-
-const OData = ({ children, ...props }) => {
-  const state = useOData(props);
-  return (
-    <FetchContext.Provider value={state}>
-      {isFunction(children) ? (
-        <FetchContext.Consumer>{children}</FetchContext.Consumer>
-      ) : (
-        children
-      )}
-    </FetchContext.Provider>
-  );
 };
-OData.Consumer = FetchContext.Consumer;
+POData.Consumer = FetchContext.Consumer;
 
-export { useOData, buildQuery };
-export default OData;
+export {useOData, QueryBuilder};
+export default POData;

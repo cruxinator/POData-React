@@ -1,9 +1,9 @@
 {
-  "name": "react-odata",
+  "name": "podata-react",
   "version": "11.0.0-1",
-  "author": "Sean Lynch <techniq35@gmail.com>",
+  "author": "Christopher Harris <c.harris@communicationinnovations.com.au>",
   "license": "MIT",
-  "repository": "techniq/react-odata",
+  "repository": "cruxinator/POData-React",
   "files": [
     "dist"
   ],
@@ -18,7 +18,6 @@
     "fetch-mock": "^6.4.4",
     "jest": "^23.1.0",
     "node-fetch": "^2.3.0",
-    "odata-query": "^5.4.0",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
     "react-fetch-component": "^8.0.0-5",
@@ -26,17 +25,19 @@
     "rimraf": "^2.6.2"
   },
   "peerDependencies": {
-    "odata-query": "^5.0.0",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
     "react-fetch-component": "^8.0.0-5"
   },
   "scripts": {
-    "test": "jest",
-    "test-watch": "jest --watch",
+    "test": "node node_modules/jest/bin/jest.js",
+    "test-watch": "node node_modules/jest/bin/jest.js --watch",
     "clean": "rimraf dist",
     "prebuild": "npm run clean -s",
     "build": "NODE_ENV=production babel src -d dist --ignore test.js",
     "preversion": "npm run build"
+  },
+  "dependencies": {
+    "odata-query-builder": "0.0.7"
   }
 }
