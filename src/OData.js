@@ -27,6 +27,11 @@ function useOData({baseUrl, defaultQuery, query, ...props}) {
         url: query !== false && buildUrl(baseUrl, {...query, ...state.query}),
         fetchFunction: (url, options, updateOptions) => {
             url = typeof url === 'string' ? url : buildUrl(baseUrl, url);
+            options = {
+                headers: {
+                    Accept: 'application/json'
+                }
+            }
             return fetch(url, options, updateOptions);
         },
         ...props
