@@ -52,6 +52,11 @@ function useOData(_ref) {
         url: query !== false && buildUrl(baseUrl, _extends({}, query, state.query)),
         fetchFunction: function fetchFunction(url, options, updateOptions) {
             url = typeof url === 'string' ? url : buildUrl(baseUrl, url);
+            options = {
+                headers: {
+                    Accept: 'application/json'
+                }
+            };
             return fetch(url, options, updateOptions);
         }
     }, props));

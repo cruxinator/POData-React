@@ -7,7 +7,7 @@
   "files": [
     "dist"
   ],
-  "main": "src/OData.js",
+  "main": "dist/OData.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-jest": "^23.0.1",
