@@ -29,7 +29,7 @@ function useOData({baseUrl, defaultQuery, query, ...props}) {
             url = typeof url === 'string' ? url : buildUrl(baseUrl, url);
             options = {
                 headers: {
-                    Accept: 'application/json'
+                    Accept: 'application/json;odata=verbose'
                 }
             }
             return fetch(url, options, updateOptions);
